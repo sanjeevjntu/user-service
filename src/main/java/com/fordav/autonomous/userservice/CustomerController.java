@@ -1,21 +1,24 @@
 package com.fordav.autonomous.userservice;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-public class UserController {
+public class CustomerController {
 
-    @GetMapping("/hello")
-    public String getHello() {
-        return "sanjeev";
+    private CustomerService customerService;
+
+    @Autowired
+    public CustomerController(CustomerService customerService) {
+        this.customerService = customerService;
     }
 
     @PostMapping("/customers")
     public ResponseEntity<Customer> create(@RequestBody Customer customer) {
-        return ResponseEntity.ok(Customer.builder().id(2L).name("sanjeev").vin("VIN234").build());
+        return new ResponseEntity<>(customerService.create(customer), HttpStatus.CREATED);
     }
 }

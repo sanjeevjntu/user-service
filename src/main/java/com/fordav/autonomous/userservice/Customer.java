@@ -11,10 +11,10 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
 @Entity
-@AllArgsConstructor
-@NoArgsConstructor
 @Data
 @Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class Customer {
 
     @Id
