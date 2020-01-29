@@ -8,7 +8,9 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 @Slf4j
 public class CustomerService {
+    private final CustomerRepository customerRepository;
+
     public Customer create(Customer customer) {
-        return new Customer();
+        return customerRepository.save(customer);
     }
 }
