@@ -11,19 +11,19 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
-import static org.junit.jupiter.api.Assertions.*;
 
 @ExtendWith(SpringExtension.class)
 @DataJpaTest
 class CustomerRepositoryTest {
 
     @Autowired
-    private CustomerRepository classToTest;
+    private CustomerRepository customerRepository;
 
     @Autowired
     private TestEntityManager entityManager;
 
     private Customer mock;
+
     @BeforeEach
     void setUp() {
         Customer mock = Customer.builder().vin("VIN1234").name("sanjeev").build();
@@ -32,13 +32,13 @@ class CustomerRepositoryTest {
 
     @AfterEach
     void tearDown() {
-        classToTest.deleteAll();
+        customerRepository.deleteAll();
     }
 
     @Test
     @DisplayName("should Success CreationOfCustomer")
     void shouldSuccessCreationOfCustomer() {
-        Customer actual = classToTest.save(mock);
+        Customer actual = customerRepository.save(mock);
         Assertions.assertThat(actual.getId()).isEqualTo(mock.getId());
         Assertions.assertThat(actual).isEqualTo(mock);
     }
