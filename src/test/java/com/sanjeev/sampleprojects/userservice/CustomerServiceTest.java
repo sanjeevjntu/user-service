@@ -1,8 +1,8 @@
-package com.fordav.autonomous.userservice;
+package com.sanjeev.sampleprojects.userservice;
 
-import com.fordav.autonomous.userservice.controller.Customer;
-import com.fordav.autonomous.userservice.service.CustomerRepository;
-import com.fordav.autonomous.userservice.service.CustomerService;
+import com.sanjeev.sampleprojects.userservice.controller.Customer;
+import com.sanjeev.sampleprojects.userservice.service.CustomerRepository;
+import com.sanjeev.sampleprojects.userservice.service.CustomerService;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

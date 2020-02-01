@@ -1,4 +1,4 @@
-package com.fordav.autonomous.userservice;
+package com.sanjeev.sampleprojects.userservice;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;

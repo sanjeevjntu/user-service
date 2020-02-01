@@ -1,8 +1,8 @@
-package com.fordav.autonomous.userservice;
+package com.sanjeev.sampleprojects.userservice;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fordav.autonomous.userservice.controller.Customer;
-import com.fordav.autonomous.userservice.service.CustomerService;
+import com.sanjeev.sampleprojects.userservice.controller.Customer;
+import com.sanjeev.sampleprojects.userservice.service.CustomerService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

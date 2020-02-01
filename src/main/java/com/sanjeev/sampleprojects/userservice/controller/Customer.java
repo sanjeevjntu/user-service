@@ -1,7 +1,9 @@
-package com.fordav.autonomous.userservice.controller;
+package com.sanjeev.sampleprojects.userservice.controller;
 
 import io.swagger.v3.oas.annotations.media.Schema;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.Entity;
@@ -13,6 +15,8 @@ import java.util.UUID;
 
 @Entity
 @Data
+@Builder
+@NoArgsConstructor
 public class Customer {
 
     @Schema(description = "Unique identifier of the Customer.", example = "3fa85f64-5717-4562-b3fc-2c963f66afa6", required = true)

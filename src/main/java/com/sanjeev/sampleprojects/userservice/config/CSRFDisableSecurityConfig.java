@@ -1,4 +1,4 @@
-package com.fordav.autonomous.userservice.config;
+package com.sanjeev.sampleprojects.userservice.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

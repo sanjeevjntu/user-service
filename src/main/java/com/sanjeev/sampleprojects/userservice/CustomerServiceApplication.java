@@ -1,4 +1,4 @@
-package com.fordav.autonomous.userservice;
+package com.sanjeev.sampleprojects.userservice;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

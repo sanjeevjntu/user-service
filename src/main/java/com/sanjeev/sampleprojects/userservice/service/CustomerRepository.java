@@ -1,6 +1,6 @@
-package com.fordav.autonomous.userservice.service;
+package com.sanjeev.sampleprojects.userservice.service;
 
-import com.fordav.autonomous.userservice.controller.Customer;
+import com.sanjeev.sampleprojects.userservice.controller.Customer;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.UUID;

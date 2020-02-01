@@ -1,4 +1,4 @@
-package com.fordav.autonomous.userservice.service;
+package com.sanjeev.sampleprojects.userservice.service;
 
 public class CustomerNotFoundException extends IllegalArgumentException {
 

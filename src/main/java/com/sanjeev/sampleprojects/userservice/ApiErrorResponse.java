@@ -1,4 +1,4 @@
-package com.fordav.autonomous.userservice;
+package com.sanjeev.sampleprojects.userservice;
 
 import lombok.Builder;
 import lombok.Data;

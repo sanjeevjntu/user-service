@@ -1,6 +1,6 @@
-package com.fordav.autonomous.userservice.controller;
+package com.sanjeev.sampleprojects.userservice.controller;
 
-import com.fordav.autonomous.userservice.service.CustomerService;
+import com.sanjeev.sampleprojects.userservice.service.CustomerService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;

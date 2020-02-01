@@ -1,6 +1,6 @@
-package com.fordav.autonomous.userservice;
+package com.sanjeev.sampleprojects.userservice;
 
-import com.fordav.autonomous.userservice.service.CustomerNotFoundException;
+import com.sanjeev.sampleprojects.userservice.service.CustomerNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
@@ -50,10 +50,8 @@ public class CustomerServiceGlobalExceptionHandler {
     public ResponseEntity<Map<String, String>> constraintViolationException(ConstraintViolationException ex) {
         HashMap<String, String> errors = new HashMap<>();
         Set<ConstraintViolation<?>> violations = ex.getConstraintViolations();
-        violations.forEach(constraintViolation -> {
-            errors.put((String) constraintViolation.getInvalidValue(), constraintViolation.getMessage());
-
-        });
+        violations.forEach(constraintViolation ->
+                errors.put((String) constraintViolation.getInvalidValue(), constraintViolation.getMessage()));
         return new ResponseEntity<>(errors, HttpStatus.BAD_REQUEST);
     }
 

@@ -1,6 +1,6 @@
-package com.fordav.autonomous.userservice.service;
+package com.sanjeev.sampleprojects.userservice.service;
 
-import com.fordav.autonomous.userservice.controller.Customer;
+import com.sanjeev.sampleprojects.userservice.controller.Customer;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
