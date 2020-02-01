@@ -1,5 +1,7 @@
 package com.fordav.autonomous.userservice;
 
+import com.fordav.autonomous.userservice.controller.Customer;
+import com.fordav.autonomous.userservice.service.CustomerRepository;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;

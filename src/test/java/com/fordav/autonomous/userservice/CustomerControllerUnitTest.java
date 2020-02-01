@@ -1,6 +1,8 @@
 package com.fordav.autonomous.userservice;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fordav.autonomous.userservice.controller.Customer;
+import com.fordav.autonomous.userservice.service.CustomerService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -13,6 +15,8 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+
+import java.util.UUID;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
@@ -39,7 +43,7 @@ public class CustomerControllerUnitTest {
     public void shouldSuccessfullyCreateCustomer() throws Exception {
         Customer mock = Customer.builder().vin("VIN1234").name("sanjeev").build();
         String writeValueAsString =  new ObjectMapper().writeValueAsString(mock);
-        mock.setId(1L);
+        mock.setId(UUID.randomUUID());
 
         when(customerService.create(any(Customer.class))).thenReturn(mock);
         ResultActions resultActions = mockMvc

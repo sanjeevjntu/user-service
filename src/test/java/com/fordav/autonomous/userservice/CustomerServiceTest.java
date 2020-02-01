@@ -1,11 +1,16 @@
 package com.fordav.autonomous.userservice;
 
+import com.fordav.autonomous.userservice.controller.Customer;
+import com.fordav.autonomous.userservice.service.CustomerRepository;
+import com.fordav.autonomous.userservice.service.CustomerService;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
+
+import java.util.UUID;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
@@ -21,7 +26,7 @@ public class CustomerServiceTest {
 
     @Test
     public void shouldSuccessfullyCreateACustomer() {
-        Customer mock = Customer.builder().id(1L).vin("VIN1234").name("sanjeev").build();
+        Customer mock = Customer.builder().id(UUID.randomUUID()).vin("VIN1234").name("sanjeev").build();
         when(customerRepository.save(any(Customer.class))).thenReturn(mock);
 
         Customer actual = classToTest.create(mock);
