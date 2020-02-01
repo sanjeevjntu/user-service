@@ -30,6 +30,6 @@ public class Customer {
 
     @Schema(description = "Vin of the Customer.", example = "VIN1234567890123", required = true)
     @NotBlank(message="vin should not be blank")
-    //@Size(message = "vin should be 17 length", min = 17, max = 17)
+    @Size(message = "vin should be 17 length", min = 17, max = 17)
     private String vin;
 }
