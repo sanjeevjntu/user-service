@@ -1,4 +1,4 @@
-package com.sanjeev.sampleprojects.userservice;
+package com.sanjeev.sampleprojects.userservice.errorhandling;
 
 import lombok.Builder;
 import lombok.Data;

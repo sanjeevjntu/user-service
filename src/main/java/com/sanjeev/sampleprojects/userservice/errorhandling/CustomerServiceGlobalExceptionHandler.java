@@ -1,4 +1,4 @@
-package com.sanjeev.sampleprojects.userservice;
+package com.sanjeev.sampleprojects.userservice.errorhandling;
 
 import com.sanjeev.sampleprojects.userservice.service.CustomerNotFoundException;
 import org.springframework.http.HttpStatus;

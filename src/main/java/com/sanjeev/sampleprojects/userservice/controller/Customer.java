@@ -1,6 +1,7 @@
 package com.sanjeev.sampleprojects.userservice.controller;
 
 import io.swagger.v3.oas.annotations.media.Schema;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -17,6 +18,7 @@ import java.util.UUID;
 @Data
 @Builder
 @NoArgsConstructor
+@AllArgsConstructor
 public class Customer {
 
     @Schema(description = "Unique identifier of the Customer.", example = "3fa85f64-5717-4562-b3fc-2c963f66afa6", required = true)
