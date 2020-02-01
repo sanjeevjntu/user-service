@@ -1,0 +1,816 @@
+swagger: '2.0'
+info:
+  description: A service to create and modify state machines.
+  version: '0.1'
+  title: State Machine Service
+host: 'localhost:8080'
+basePath: /
+schemes:
+  - http
+produces:
+  - application/json
+security:
+  - OAuth2: []
+paths:
+  /v1/{tenantId}/stateMachines:
+    post:
+      tags:
+        - StateMachine
+      summary: Create a new state machine
+      description: Creates a new state machine
+      operationId: createStateMachineUsingPOST
+      parameters:
+        - name: tenantId
+          in: path
+          description: What tenant to create it in
+          required: true
+          type: string
+          x-example: 101
+        - in: body
+          name: stateMachine
+          description: State machine to create
+          required: true
+          schema:
+            $ref: '#/definitions/StateMachine'
+      responses:
+        201:
+          description: Created
+          schema:
+            $ref: '#/definitions/SingleResponseConfirmation'
+        400:
+          description: Invalid input
+  /v1/{tenantId}/stateMachines/{stateMachineId}/makeReadOnly:
+    post:
+      tags:
+        - StateMachine
+      summary: Convert state machine to Read-only
+      description: Convert state machine to Read-only
+      operationId: updateStateMachineReadOnly
+      consumes: []
+      parameters:
+        - in: header
+          name: X-RESOURCE-VERSION
+          type: integer
+          format: int64
+          required: true
+          example: '1234567890'
+        - name: tenantId
+          in: path
+          description: What tenant the state machine we are cloning is in
+          required: true
+          type: string
+          x-example: 101
+        - name: stateMachineId
+          in: path
+          description: ID of state machine that we are making read only
+          required: true
+          type: string
+          x-example: 5a60b1c45a29b5764d10c92a
+      responses:
+        200:
+          description: Ok
+        404:
+          description: The given state machine id had no associated resource in the db
+        405:
+          description: Invalid input
+  /v1/{tenantId}/stateMachines/{stateMachineId}/clone:
+    post:
+      tags:
+        - StateMachine
+      summary: Create a clone of the state machine
+      description: Performs a deep copy of a state machine
+      operationId: cloneStateMachineUsingPOST
+      parameters:
+        - name: tenantId
+          in: path
+          description: What tenant the state machine we are cloning is in
+          required: true
+          type: string
+          x-example: 101
+        - name: stateMachineId
+          in: path
+          description: ID of state machine that we are cloning
+          required: true
+          type: string
+          x-example: 5a60b1c45a29b5764d10c92a
+        - in: body
+          name: cloneRequest
+          description: State machine to update
+          required: true
+          schema:
+            $ref: '#/definitions/CloneRequest'
+      responses:
+        201:
+          description: Created
+          schema:
+            $ref: '#/definitions/SingleResponseConfirmation'
+        404:
+          description: The given state machine id had no associated resource in the db
+        405:
+          description: Invalid input
+  /v1/{tenantId}/stateMachines/{stateMachineId}:
+    get:
+      tags:
+        - StateMachine
+      summary: Find State Machine by ID
+      description: Returns a single state machine if one is found
+      operationId: getStateMachineUsingGET
+      parameters:
+        - name: tenantId
+          in: path
+          description: What tenant to look in
+          required: true
+          x-example: 101
+          type: string
+        - name: stateMachineId
+          in: path
+          description: ID of state machine to return
+          required: true
+          type: string
+          x-example: 5a60b1c45a29b5764d10c92a
+      responses:
+        200:
+          description: OK
+          schema:
+            $ref: '#/definitions/StateMachine'
+        204:
+          description: No Content
+
+        400:
+          description: If a malformed id was sent
+        404:
+          description: State Machine not found
+    delete:
+      tags:
+        - StateMachine
+      summary: Delete StateMachine by ID. This is restricted to inter-api communication.
+      description: Deletes a state machine
+      operationId: deleteStateMachineUsingDELETE
+      parameters:
+        - name: tenantId
+          in: path
+          description: What tenant to look in
+          required: true
+          x-example: 101
+          type: string
+        - name: stateMachineId
+          in: path
+          description: ID of state Machine to delete
+          required: true
+          type: string
+          x-example: 5a60b1c45a29b5764d10c92a
+      responses:
+        200:
+          description: OK
+          schema:
+            $ref: '#/definitions/StateMachine'
+        404:
+          description: StateMachine not found
+        405:
+          description: Invalid Input
+    put:
+      tags:
+        - StateMachine
+      summary: Update a state machine in place
+      description: Allows updates on writeable fields on a state machine
+      operationId: updateStateMachineUsingPUT
+      parameters:
+        - in: header
+          name: X-RESOURCE-VERSION
+          type: integer
+          format: int64
+          required: true
+          example: '1234567890'
+        - name: tenantId
+          in: path
+          description: What tenant the state machine we are updating is in
+          required: true
+          type: string
+          x-example: 101
+        - name: stateMachineId
+          in: path
+          description: ID of state machine that we are updating
+          required: true
+          type: string
+          x-example: 5a60b1c45a29b5764d10c92a
+        - in: body
+          name: stateMachine
+          description: State machine to update
+          required: true
+          schema:
+            $ref: '#/definitions/StateMachine'
+      responses:
+        200:
+          description: Ok
+        404:
+          description: The given state machine id had no associated resource in the db
+        405:
+          description: Invalid input
+        412:
+          description: Resource is not in the latest state, it may have been updated by another client
+  /v1/{tenantId}/stateMachines/{stateMachineId}/states:
+    post:
+      tags:
+        - State
+      summary: "Create a new state in the context of an existing writable state machine"
+      description: "Creates a new state"
+      operationId: createStateUsingPOST
+      parameters:
+        - in: header
+          name: X-RESOURCE-VERSION
+          type: integer
+          format: int64
+          required: true
+          example: '1234567890'
+        - name: tenantId
+          in: path
+          description: "What tenant to create the state in"
+          required: true
+          type: string
+          x-example: 101
+        - name: stateMachineId
+          in: path
+          description: ID of state machine that the state is being created in.
+          required: true
+          type: string
+          x-example: "5a60b1c45a29b5764d10c92a"
+        - name: state
+          in: body
+          description: "State to create within the state machine"
+          required: true
+          schema:
+            $ref: '#/definitions/State'
+      responses:
+        201:
+          description: "The state was successfully created."
+          schema:
+            $ref: '#/definitions/SingleResponseConfirmation'
+        404:
+          description: "If the state machine id passed does not exist."
+        400:
+          description: "The state was not valid for some reason."
+    get:
+      tags:
+        - State
+      summary: Get All States for a State Machine
+      description: Returns all the states for a State Machine
+      operationId: getStates
+      parameters:
+        - name: tenantId
+          in: path
+          description: What tenant to look in
+          required: true
+          x-example: 101
+          type: string
+        - name: stateMachineId
+          in: path
+          description: ID of state Machine to return
+          required: true
+          type: string
+          x-example: 5a60b1c45a29b5764d10c92a
+      responses:
+        200:
+          description: OK
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/State'
+        404:
+          description: State not found
+        405:
+          description: Invalid Input
+  /v1/{tenantId}/stateMachines/{stateMachineId}/states/{stateId}:
+    put:
+      tags:
+        - State
+      summary: "Update a new state in the context of an existing writable state machine"
+      description: "Updates a state"
+      operationId: updateStateUsingPUT
+      parameters:
+        - in: header
+          name: X-RESOURCE-VERSION
+          type: integer
+          format: int64
+          required: true
+          example: '1234567890'
+        - name: tenantId
+          in: path
+          description: "What tenant to update the state in"
+          required: true
+          type: string
+          x-example: 101
+        - name: stateMachineId
+          in: path
+          description: ID of state machine that the state is being updated in.
+          required: true
+          type: string
+          x-example: "5a60b1c45a29b5764d10c92a"
+        - name: stateId
+          in: path
+          description: "ID of a state within the state machine that we are searching for."
+          required: true
+          type: string
+          x-example: "5a60b1c45a29b5764d10c92a"
+        - name: state
+          in: body
+          description: "State to update within the state machine"
+          required: true
+          schema:
+            $ref: '#/definitions/State'
+      responses:
+        201:
+          description: "The state was successfully updated."
+          schema:
+            $ref: '#/definitions/SingleResponseConfirmation'
+        404:
+          description: "If the state machine id passed does not exist."
+        400:
+          description: "The state was not valid for some reason."
+    get:
+      tags:
+        - State
+      summary: "Find a state within a state machine by id"
+      description: "Returns a single state within a state machine"
+      operationId: getStateUsingGET
+      parameters:
+        - name: tenantId
+          in: path
+          description: "What tenant to search in"
+          required: true
+          x-example: 101
+          type: string
+        - name: stateMachineId
+          in: path
+          description: "ID of the state machine that the state is contained within."
+          required: true
+          type: string
+          x-example: "5a60b1c45a29b5764d10c92a"
+        - name: stateId
+          in: path
+          description: "ID of a state within the state machine that we are searching for."
+          required: true
+          type: string
+          x-example: "5a60b1c45a29b5764d10c92a"
+      responses:
+        200:
+          description: OK
+          schema:
+            $ref: '#/definitions/State'
+        404:
+          description: "State not found or state machine does not exist"
+        400:
+          description: "Malformed id of some sort was sent."
+    delete:
+      tags:
+        - State
+      summary: Delete State by ID
+      description: Deletes a single state machine
+      operationId: deleteState
+      parameters:
+        - in: header
+          name: X-RESOURCE-VERSION
+          type: integer
+          format: int64
+          required: true
+          example: '1234567890'
+        - name: tenantId
+          in: path
+          description: What tenant to look in
+          required: true
+          x-example: 101
+          type: string
+        - name: stateMachineId
+          in: path
+          description: ID of state Machine to return
+          required: true
+          type: string
+          x-example: 5a60b1c45a29b5764d10c92a
+        - name: stateId
+          in: path
+          description: ID of state to return
+          required: true
+          type: string
+          x-example: 5a60b1c45a29b5764d10c92a
+      responses:
+        200:
+          description: "The state was successfully deleted."
+        404:
+          description: State not found
+        405:
+          description: Invalid Input
+  /v1/{tenantId}/stateMachines/{stateMachineId}/orderState:
+    put:
+      tags:
+        - State
+      summary: update the order for the states for a State Machine
+      description: updates the order for states
+      operationId: updateStateOrder
+      parameters:
+        - in: header
+          name: X-RESOURCE-VERSION
+          type: integer
+          format: int64
+          required: true
+          example: '1234567890'
+        - name: tenantId
+          in: path
+          description: What tenant to create it in
+          required: true
+          type: string
+          x-example: 101
+        - name: stateMachineId
+          in: path
+          description: ID of state Machine to return
+          required: true
+          type: string
+          x-example: 5a60b1c45a29b5764d10c92a
+        - in: body
+          name: orderState
+          description: order states
+          required: true
+          schema:
+            $ref: '#/definitions/OrderState'
+      responses:
+        200:
+          description: OK
+        405:
+          description: Invalid input
+  /v1/{tenantId}/stateMachines/{stateMachineId}/states/{stateId}/entryTransitions:
+    get:
+      tags:
+        - Transition
+      summary: Get All Entry Transitions for a State Machine
+      description: Returns all the Entry Transitions for a State Machine
+      operationId: getEntryTransitions
+      parameters:
+        - name: tenantId
+          in: path
+          description: What tenant to look in
+          required: true
+          x-example: 101
+          type: string
+        - name: stateMachineId
+          in: path
+          description: ID of state Machine to return
+          required: true
+          type: string
+          x-example: 5a60b1c45a29b5764d10c92a
+        - name: stateId
+          in: path
+          description: ID of state to return
+          required: true
+          type: string
+          x-example: 5a60b1c45a29b5764d10c92a
+      responses:
+        200:
+          description: OK
+          schema:
+            $ref: '#/definitions/EntryTransitions'
+        404:
+          description: State not found
+        405:
+          description: Invalid Input
+  /v1/{tenantId}/stateMachines/{stateMachineId}/states/{stateId}/exitTransitions:
+    get:
+      tags:
+        - Transition
+      summary: Get All Exit Transitions for a State
+      description: Returns all the Exit Transitions for a State
+      operationId: getExitTransitions
+      parameters:
+        - name: tenantId
+          in: path
+          description: What tenant to look in
+          required: true
+          x-example: 101
+          type: string
+        - name: stateMachineId
+          in: path
+          description: ID of state Machine to return
+          required: true
+          type: string
+          x-example: 5a60b1c45a29b5764d10c92a
+        - name: stateId
+          in: path
+          description: ID of state to return
+          required: true
+          type: string
+          x-example: 5a60b1c45a29b5764d10c92a
+      responses:
+        200:
+          description: OK
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/ExitTransition'
+        404:
+          description: State not found
+        405:
+          description: Invalid input
+    post:
+      tags:
+        - Transition
+      summary: Create a new Transition for a State
+      description: Creates a new states Link
+      operationId: createExitTransition
+      parameters:
+        - in: header
+          name: X-RESOURCE-VERSION
+          type: integer
+          format: int64
+          required: true
+          example: '1234567890'
+        - name: tenantId
+          in: path
+          description: What tenant to create it in
+          required: true
+          type: string
+          x-example: 101
+        - name: stateMachineId
+          in: path
+          description: The id of the state machine where the transition is being created
+          required: true
+          type: string
+          x-example: 5a60b1c45a29b5764d10c92a
+        - name: stateId
+          in: path
+          description: ID of the state where transition is being created
+          required: true
+          type: string
+          x-example: 5a60b1c45a29b5764d10c92a
+        - in: body
+          name: exitTransition
+          description: Exit Transition to create
+          required: true
+          schema:
+            $ref: '#/definitions/ExitTransition'
+      responses:
+        201:
+          description: Created
+          schema:
+            $ref: '#/definitions/SingleResponseConfirmation'
+        405:
+          description: Invalid input
+  /v1/{tenantId}/stateMachines/{stateMachineId}/states/{stateId}/exitTransitions/{transitionId}:
+    put:
+      tags:
+        - Transition
+      summary: update a Transition for a State
+      description: Creates a new states Link
+      operationId: updateExitTransitionUsingPUT
+      parameters:
+        - in: header
+          name: X-RESOURCE-VERSION
+          type: integer
+          format: int64
+          required: true
+          example: '1234567890'
+        - name: tenantId
+          in: path
+          description: What tenant to create it in
+          required: true
+          type: string
+          x-example: 101
+        - name: stateMachineId
+          in: path
+          description: The id of the state machine where the transition is being updated
+          required: true
+          type: string
+          x-example: 5a60b1c45a29b5764d10c92a
+        - name: stateId
+          in: path
+          description: ID of the state where transition is being updated
+          required: true
+          type: string
+          x-example: 5a60b1c45a29b5764d10c92a
+        - name: transitionId
+          in: path
+          description: ID of transition id we are updating
+          required: true
+          type: string
+          x-example: 5a60b1c45a29b5764d10c92a
+        - in: body
+          name: exitTransition
+          description: Exit Transition to create
+          required: true
+          schema:
+            $ref: '#/definitions/ExitTransition'
+      responses:
+        200:
+          description: OK
+        405:
+          description: Invalid input
+    delete:
+      tags:
+        - Transition
+      summary: deletes a Transition for a State
+      description: Deletes an exit transition of a state
+      operationId: deleteExitTransition
+      parameters:
+        - in: header
+          name: X-RESOURCE-VERSION
+          type: integer
+          format: int64
+          required: true
+          example: '1234567890'
+        - name: tenantId
+          in: path
+          description: What tenant to delete it in
+          required: true
+          type: string
+          x-example: 101
+        - name: stateMachineId
+          in: path
+          description: ID of state machine we are performing operations in
+          required: true
+          type: string
+          x-example: 5a60b1c45a29b5764d10c92a
+        - name: stateId
+          in: path
+          description: ID of state to perform operations in
+          required: true
+          type: string
+          x-example: 5a60b1c45a29b5764d10c92a
+        - name: transitionId
+          in: path
+          description: ID of transition id we are deleting
+          required: true
+          type: string
+          x-example: 5a60b1c45a29b5764d10c92a
+      responses:
+        200:
+          description: OK
+          schema:
+            $ref: '#/definitions/ExitTransition'
+        405:
+          description: Invalid input
+  /v1/{tenantId}/stateMachines/{stateMachineId}/states/{stateId}/orderTransition:
+    put:
+      tags:
+        - Transition
+      summary: update the order for the Transition for a State
+      description: updates the order for a transition
+      operationId: updateTransitionOrder
+      parameters:
+        - in: header
+          name: X-RESOURCE-VERSION
+          type: integer
+          format: int64
+          required: true
+          example: '1234567890'
+        - name: tenantId
+          in: path
+          description: What tenant to update it in
+          required: true
+          type: string
+          x-example: 101
+        - name: stateMachineId
+          in: path
+          description: The id of the state machine to update the transition
+          required: true
+          type: string
+          x-example: 5a60b1c45a29b5764d10c92a
+        - name: stateId
+          in: path
+          description: The id of the state to update the transition
+          required: true
+          type: string
+          x-example: 5a60b1c45a29b5764d10c92a
+        - in: body
+          name: orderTransition
+          description: Exit Transition to create
+          required: true
+          schema:
+            $ref: '#/definitions/OrderTransition'
+      responses:
+        200:
+          description: OK
+        405:
+          description: Invalid input
+securityDefinitions:
+  Bearer:
+    type: apiKey
+    name: Authorization
+    in: header
+  OAuth2:
+    type: oauth2
+    tokenUrl: "something"
+    flow: application
+definitions:
+  State:
+    type: object
+    title: State
+    properties:
+      id:
+        type: string
+        readOnly: true
+        description: "The internal reference id of a state"
+      name:
+        type: string
+        description: "The client defined name of a state."
+      description:
+        type: string
+        description: "The client defined description of a state."
+  StateMachine:
+    type: object
+    title: StateMachine
+    properties:
+      initialStateId:
+        type: string
+        description: The id of the initial state for the state machine
+      id:
+        type: string
+        readOnly: true
+        description: "The internal reference id that a state machine has."
+      readOnly:
+        readOnly: true
+        type: boolean
+        description: The write mode of the state machine. If read only, the state machine and its underlying assets may not be edited.
+      resourceVersion:
+        readOnly: true
+        type: integer
+        format: int64
+        description: The resource version of the entity in the database.
+  ExitTransition:
+    title: ExitTransition
+    type: object
+    properties:
+      stateId:
+        description: "The id of the state in the state machine this transitions to."
+        type: string
+      logicId:
+        description: "The conditional logic id that determines if this transition applies."
+        type: string
+        readOnly: true
+      id:
+        description: "The generated id of the transition. This is not an internal db reference but rather a resource identifier!"
+        type: string
+        readOnly: true
+
+  EntryTransitions:
+    title: EntryTransition
+    type: object
+    additionalProperties:
+      type: array
+      items:
+        $ref: '#/definitions/ExitTransition'
+  OrderState:
+    title: OrderState
+    type: object
+    required:
+      - stateId
+      - order
+    properties:
+      stateId:
+        type: string
+      order:
+        type: integer
+
+  OrderTransition:
+    title: OrderTransition
+    type: object
+    required:
+      - transitionId
+      - order
+    properties:
+      transitionId:
+        type: string
+      order:
+        type: integer
+  Confirmation:
+    type: object
+    properties:
+      resourceId:
+        type: string
+        description: The id of the resource that was modified
+        readOnly: true
+    title: Confirmation
+    description: A general use return type that includes a reference to the changed resource
+  SingleResponseConfirmation:
+    type: object
+    properties:
+      data:
+        description: The requested data.
+        readOnly: true
+        $ref: '#/definitions/Confirmation'
+      requestId:
+        type: string
+        description: A unique reference to the request. Used to specifically reference this exact request if needed.
+        readOnly: true
+      responseTs:
+        type: string
+        format: date-time
+        description: The timestamp that this response was returned at
+        readOnly: true
+    title: 'SingleResponse«Confirmation»'
+    description: A general use response type when the data being returned is a single Object
+  CloneRequest:
+    type: object
+    title: CloneRequest
+    required:
+      - writeMode
+    properties:
+      writeMode:
+        type: string
+        description: The write mode of the state machine. If read only, the state machine and its underlying assets may not be edited.
+        enum: [READ_ONLY,WRITABLE]
