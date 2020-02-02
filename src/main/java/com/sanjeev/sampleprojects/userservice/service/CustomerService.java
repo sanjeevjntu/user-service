@@ -1,6 +1,6 @@
 package com.sanjeev.sampleprojects.userservice.service;
 
-import com.sanjeev.sampleprojects.userservice.controller.Customer;
+import com.sanjeev.sampleprojects.userservice.domain.Customer;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;

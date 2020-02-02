@@ -34,7 +34,7 @@ public class CSRFDisableSecurityConfig extends WebSecurityConfigurerAdapter {
                 .authorizeRequests()
                 .antMatchers("/hello").hasRole("ADMIN")
                 .antMatchers("/customers").hasAnyRole("USER", "ADMIN")
-                .antMatchers("/swagger-ui.html").hasRole("ADMIN")
+               // .antMatchers("/swagger-ui.html").hasRole("ADMIN")
                 .antMatchers("/**").permitAll()
                 .and()
                 .formLogin()
